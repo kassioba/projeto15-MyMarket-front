@@ -1,38 +1,110 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components"
 import HeaderComponent from "../components/HeaderComponent"
 import FooterComponent from "../components/FooterComponent"
+import { useContext, useEffect } from "react"
+import Context from "../Context"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+
 
 export default function CartPage() {
+    const context = useContext(Context)
+    const navigate = useNavigate()
+
+    function calculateTotal() {
+        let newTotal = 0
+
+        for(let i = 0; i < context.cart.length; i++) {
+            newTotal += context.cart[i].product.price * context.cart[i].units
+        }
+
+        context.setTotal(newTotal)
+    }
+
+    const newOrder = {
+        products: context.cart,
+        customerId: "?",
+        finalPrice: context.total,
+    }
+
+    const config = {
+        headers: {
+          Authorization: `Bearer ${context.token}`,
+        }
+    }
+
+    const url = "http://localhost:5000/cart"
+
+    function goCheckOut() {
+        const promise = axios.post(url, newOrder, config)
+        
+        promise
+            .then(() => navigate("/checkout"))
+            .catch((err) => alert(err.response.data))
+    }
+    
+    function deleteCartProduct(productId) {
+        const updatedCart = context.cart.filter(item => item.product._id !== productId)
+        context.setCart(updatedCart)
+        const updatedCartJSON = JSON.stringify(updatedCart)
+        localStorage.setItem("cart", updatedCartJSON)
+
+        calculateTotal()
+      }
+
+    useEffect(() => {
+        calculateTotal()
+        const cartJSON = localStorage.getItem("cart")
+        if (cartJSON) {
+            const cart = JSON.parse(cartJSON)
+            context.setCart(cart)
+        }
+    }, [context.cart])
   
     return (
       <>
         <HeaderComponent />
         <CartContainer>
             <CartBoard>
-                <ul>
-                    <CartCard>
-                        <img alt="Foto do Produto" src="https://samsclub.vtexassets.com/arquivos/ids/165434/arroz-branco-namorado-pacote-5kg-7896079431158.jpg?v=637619573420100000" />
-                        <div>
-                            <section>
-                                <main>
-                                    <h2>Product Name</h2>
-                                    <h3>Product Description</h3>
-                                </main>
-                                <div>
-                                    <h4>R$ 10,00</h4>
-                                </div>
-                            </section>
-                            <button> ver detalhes</button>
-                        </div>
-                    </CartCard>
-
-                </ul>
-                <BalanceContainer>
-                <p>TOTAL</p>
-                <p>R$ 25,00</p>
-                </BalanceContainer>
+            {context.cart.length > 0 ? (
+                <>
+                        <ul>
+                            {context.cart.map(p => (
+                                <CartCard key={p.product._id}>
+                                    <img alt="Foto do Produto" src={p.product.image} />
+                                    <div>
+                                        <section>
+                                            <main>
+                                                <h2>{p.product.name}</h2>
+                                                <h3>
+                                                ({p.units > 1 ? `${p.units} Unidades` : `${p.units} Unidade`}) - {p.product.description}
+                                                </h3>
+                                            </main>
+                                            <div>
+                                                <h4>
+                                                    {(p.product.price * p.units)
+                                                    .toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}
+                                                </h4>
+                                            </div>
+                                        </section>
+                                        <button onClick={() => deleteCartProduct(p.product._id)}>remover do carrinho</button>
+                                    </div>
+                                </CartCard>
+                            ))}
+                        </ul>
+                        <TotalContainer>
+                        <p>TOTAL</p>
+                        <p>{context.total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+                        </TotalContainer>
+                </>
+            ) : <p>Seu carrinho está vazio!</p>}
             </CartBoard>
-            <ButtonClosePurchase>Prosseguir para Pagamento</ButtonClosePurchase>
+            <ButtonClosePurchase
+            disabled={context.cart.length > 0 ? false : true}
+            onClick={goCheckOut}>
+                Prosseguir para Pagamento
+            </ButtonClosePurchase>
         </CartContainer>
         <FooterComponent />
         </>
@@ -55,6 +127,13 @@ background-color: white;
 border-radius: 4px;
 padding: 10px;
 position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+p{
+    font-family: 'Ropa Sans';
+    font-size: 25px;
+}
 
 ul{
     width: 100%;
@@ -131,7 +210,7 @@ font-family: 'Ropa Sans';
 font-size: 25px;
 `
 
-const BalanceContainer = styled.div`
+const TotalContainer = styled.div`
 width: calc(100% - 20px);
 height: 20px;
 

@@ -29,7 +29,7 @@ height: 10vh;
 color: white;
 margin-top: 12vh;
 & > svg:first-child {
-margin-left: 10px;
+margin-left: 15px;
 color: white;
 font-size: 40px;
 }
@@ -39,7 +39,7 @@ color: white;
 font-size: 40px;
 }
 & > svg:last-child {
-margin-right: 10px;
+margin-right: 15px;
 color: white;
 font-size: 40px;
 }

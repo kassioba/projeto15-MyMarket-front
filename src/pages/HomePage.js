@@ -1,30 +1,82 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components"
 import HeaderComponent from "../components/HeaderComponent"
 import FooterComponent from "../components/FooterComponent"
 import { AiOutlineShoppingCart } from "react-icons/ai"
+import axios from "axios"
+import { useContext, useEffect } from "react"
+import Context from "../Context"
+// import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
+    // const navigate = useNavigate()
+    const context = useContext(Context)
+    const url = "http://localhost:5000/home"
+
+    function getProducts() {
+        const promise = axios.get(url)
+        promise
+            .then(res => context.setProducts(res.data))
+            .catch(err => console.log(err))
+    }
+
+    function addToCart(product) {
+        // if (!context.token) {
+        //     navigate("/SignIn")
+        //     return alert("Entre com seu e-mail e senha!")
+        // }
+        const existingProductIndex = context.cart.findIndex((item) => item.product._id === product._id)
+        
+        if (existingProductIndex === -1) {
+            const updatedCart = [...context.cart, { product: JSON.parse(JSON.stringify(product)), units: 1 }]
+            context.setCart(updatedCart)
+            const updatedCartJSON = JSON.stringify(updatedCart)
+            localStorage.setItem("cart", updatedCartJSON)
+        } else {
+            const updatedCart = [...context.cart]
+            updatedCart[existingProductIndex].units += 1
+            context.setCart(updatedCart)
+            const updatedCartJSON = JSON.stringify(updatedCart)
+            localStorage.setItem("cart", updatedCartJSON)
+        }
+    }
+    
+    function calculateTotal() {
+        let newTotal = 0
+
+        for(let i = 0; i < context.cart.length; i++) {
+            newTotal += context.cart[i].product.price * context.cart[i].units
+        }
+
+        context.setTotal(newTotal)
+    }
+
+    useEffect(() => {
+        getProducts()
+        calculateTotal()
+    }, [])
   
   return (
     <>
       <HeaderComponent />
         <ProductsContainer>
-            <ProductCard>
-                <img alt="Foto do Produto" src="https://samsclub.vtexassets.com/arquivos/ids/165434/arroz-branco-namorado-pacote-5kg-7896079431158.jpg?v=637619573420100000" />
-                <h2>Product Name</h2>
-                <h3>Product Description</h3>
-                <h4>R$ 10,00</h4>
-                <h5>ver detalhes</h5>
-                <div />
-                <button>
+            {context.products.map(p => (
+            <ProductCard key={p._id}>
+                <img alt="Foto do Produto" src={p.image} />
+                <h2>{p.name}</h2>
+                <h3>{p.description}</h3>
+                <h4>{p.price.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</h4>
+                <h5> </h5>
+                <button onClick={() => addToCart(p)}>
                     Adicionar ao Carrinho
                     <AiOutlineShoppingCart />
                 </button>
             </ProductCard>
+            ))}
         </ProductsContainer>
       <FooterComponent />
       </>
-  );
+  )
 }
 
 const ProductsContainer = styled.div`
@@ -36,7 +88,7 @@ flex-direction: wrap;
 flex-wrap: wrap;
 justify-content: center;
 align-items: center;
-gap: 15px;
+gap: 20px;
 padding: 10px;
 `
 const ProductCard = styled.div`
