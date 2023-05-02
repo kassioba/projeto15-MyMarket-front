@@ -2,29 +2,40 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import styled from "styled-components"
 import SignInPage from "./pages/SignIn/SignIn"
 import SignUpPage from "./pages/SignUp/SignUp"
-import UserContext from "./UserContext"
-import { useState } from "react"
+import HomePage from "./pages/HomePage"
+import CartPage from "./pages/CartPage"
+import React, { useState } from "react"
+import Context from "./Context"
 
 export default function App() {
-  const [token, setToken] = useState("");
+
+  const [products, setProducts] = useState([])
+  const [cart, setCart] = useState([])
+  const [total, setTotal] = useState(0)
+  const [token, setToken] = useState("")
+  const [userId, setUserId] = useState("")
+
+  const url = "https://mymarket.onrender.com/"
+
+  const contextValue = { products, setProducts, cart, setCart, total, setTotal, token, setToken, url, userId, setUserId }
   
   return (
-    <PagesContainer>
-      <UserContext.Provider value={{ token, setToken }}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<SignInPage />} />
-            <Route path="/cadastro" element={<SignUpPage />} />
-          </Routes>
-        </BrowserRouter>
-      </UserContext.Provider>
-    </PagesContainer>
+        <Context.Provider value={contextValue}>
+          <BrowserRouter>
+            <PagesContainer>
+              <Routes>
+                <Route path="/" element={<SignInPage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/cart" element={<CartPage />} />
+              </Routes>
+            </PagesContainer>
+          </BrowserRouter>
+        </Context.Provider>
   )
 }
 
 const PagesContainer = styled.main`
-  background-color: #E01339;
-  width: calc(100vw - 50px);
-  max-height: 100vh;
-  padding: 25px;
+background-color: #89192E;
+height: 100vh;
 `

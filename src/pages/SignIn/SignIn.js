@@ -1,16 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import UserContext from "../../UserContext";
-import { SingInContainer } from "./SignInStyles";
+import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect, useContext } from "react"
+import axios from "axios"
+import { SingInContainer } from "./SignInStyles"
+import Context from "../../Context"
 
 export default function SignInPage() {
     const [form, setForm] = useState({ email: "", password: "" })
-    const [disableButton, setDisableButton] = useState(true);
-    const [sendSignIn, setSendSignIn] = useState(false);
-    const navigate = useNavigate();
+    const [disableButton, setDisableButton] = useState(true)
+    const [sendSignIn, setSendSignIn] = useState(false)
+    const navigate = useNavigate()
 
-    const { setToken } = useContext(UserContext);
+    const context = useContext(Context)
 
     useEffect(() => {
         if (form.email && form.password) {
@@ -21,7 +21,7 @@ export default function SignInPage() {
     }, [form])
 
     function handleForm(e) {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
 
     function submitSignIn(e) {
@@ -30,16 +30,19 @@ export default function SignInPage() {
         axios.post("https://mymarket.onrender.com/signIn", form)
             .then((res) => {
                 setSendSignIn(false)
-                setToken(res.data);
-                setDisableButton(true);
-                setSendSignIn(false);
-                navigate("/");
+                context.setToken(res.data.token)
+                context.setUserId(res.data.userId)
+                console.log(res.data)
+                setDisableButton(true)
+                setSendSignIn(false)
+                navigate("/home")
+                localStorage.setItem("token", res.data.token)
             })
             .catch((err) => {
-                alert(`${err.message}\n${err.request.statusText} ${err.request.status}`);
-                setDisableButton(true);
-                setSendSignIn(false);
-            });
+                alert(`${err.message}\n${err.request.statusText} ${err.request.status}`)
+                setDisableButton(true)
+                setSendSignIn(false)
+            })
     }
     return (
         <SingInContainer>
@@ -69,10 +72,9 @@ export default function SignInPage() {
                 <button disabled={disableButton || sendSignIn}>Entrar</button>
             </form>
 
-            <Link to={"/cadastro"} >
+            <Link to={"/signup"} >
                 Primeira vez? Cadastre-se!
             </Link>
         </SingInContainer>
     )
 }
-

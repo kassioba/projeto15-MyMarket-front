@@ -1,22 +1,21 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 const GlobalStyle = createGlobalStyle`
     * {
         font-family: 'Raleway';
         font-style: normal;
         font-weight: 400;
+        box-sizing: border-box;
     }
     button {
         outline: none;
         border: none;
         border-radius: 5px;
         background-color: #E01339;
-        font-size: 20px;
         font-weight: 600;
         color: #fff;
         cursor: pointer;
         width: 100%;
-        padding: 12px;
     }
     input {
         font-size: 20px;
