@@ -8,6 +8,7 @@ import Context from "../Context"
 
 export default function OrdersPage(){
     const [orders, setOrders] = useState([])
+    const context = useContext(Context)
 
     const token = localStorage.getItem('token')
 
@@ -18,11 +19,12 @@ export default function OrdersPage(){
     }
 
     useEffect(() => {
-        axios.get("http://localhost:5000/orders", config)
+        axios.get(`https://mymarket.onrender.com/orders`, config)
         .then(res => setOrders(res.data.reverse()))
         .catch(err => console.log(err))
     },[])
 
+     
     return (
         <>
         <HeaderComponent/>

@@ -1,12 +1,15 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import HeaderComponent from "../components/HeaderComponent"
 import FooterComponent from "../components/FooterComponent"
+import Context from "../Context"
+
 
 export default function OrderPage(){
     const [order, setOrder] = useState([])
+    const context = useContext(Context)
     const params = useParams()
     const token = localStorage.getItem('token')
     const config = {
@@ -16,7 +19,7 @@ export default function OrderPage(){
     }
 
     useEffect(() => {
-       axios.get(`http://localhost:5000/orders/${params.OrderId}`, config)
+       axios.get(`https://mymarket.onrender.com/orders/${params.OrderId}`, config)
        .then(res => setOrder(res.data))
        .catch(err => console.log(err))
     }, [])
