@@ -6,6 +6,9 @@ import HomePage from "./pages/HomePage"
 import CartPage from "./pages/CartPage"
 import React, { useState } from "react"
 import Context from "./Context"
+import OrdersPage from "./pages/OrdersPage"
+import CheckOutPage from "./pages/CheckoutPage"
+import OrderPage from "./pages/OrderPage"
 
 export default function App() {
 
@@ -28,6 +31,9 @@ export default function App() {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckOutPage/>}/>
+                <Route path="/orders" element={<OrdersPage/>}/>
+                <Route path="/orders/:OrderId" element={<OrderPage/>}/>
               </Routes>
             </PagesContainer>
           </BrowserRouter>

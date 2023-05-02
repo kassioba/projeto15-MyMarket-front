@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { CiCirclePlus, CiClock2, CiHome } from "react-icons/ci"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function FooterComponent() {
     const navigate = useNavigate()
@@ -9,7 +9,9 @@ export default function FooterComponent() {
         <Footer>
             <CiCirclePlus />
             <CiHome onClick={() => navigate("/home")}/>
+            <Link to='/orders'>
             <CiClock2 />
+            </Link>
         </Footer>
     );
 }
@@ -37,8 +39,15 @@ font-size: 40px;
 color: white;
 font-size: 40px;
 }
-& > svg:last-child {
-margin-right: 15px;
+a{
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    padding: 0;
+}
+
+a svg{
+    margin-right: 15px;
 color: white;
 font-size: 40px;
 }
