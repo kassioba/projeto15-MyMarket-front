@@ -27,4 +27,10 @@ h1 {
     font-size: 45px;
     color: white;
 }
+
+p{
+    color: white;
+    cursor: pointer;
+    margin-top: 15px;
+}
 `

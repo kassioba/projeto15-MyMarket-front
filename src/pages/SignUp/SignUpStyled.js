@@ -27,4 +27,9 @@ h1 {
     font-size: 45px;
     color: white;
 }
+p{
+    color: white;
+    margin-top: 15px;
+    cursor: pointer;
+}
 `

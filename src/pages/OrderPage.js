@@ -14,17 +14,15 @@ export default function OrderPage(){
     const token = localStorage.getItem('token')
     const config = {
         headers:{
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token || context.token}`
         }
     }
 
     useEffect(() => {
-       axios.get(`https://mymarket.onrender.com/orders/${params.OrderId}`, config)
+       axios.get(`${context.url}orders/${params.OrderId}`, config)
        .then(res => setOrder(res.data))
        .catch(err => console.log(err))
     }, [])
-
-    console.log(order)
 
 
     return (
@@ -59,6 +57,7 @@ const PageContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Ropa Sans';
 
     .itens-container{
         width: 100%;

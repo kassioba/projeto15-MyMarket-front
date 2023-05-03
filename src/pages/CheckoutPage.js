@@ -15,16 +15,14 @@ export default function CheckOutPage(){
 
     const context = useContext(Context)
 
-    console.log(context.cart)
-
     function finishOrder(e){
         e.preventDefault()
 
         if(!name || !address || !complement || !zipCode || !payment) return alert('Por favor, preencha todos os campos.')
 
         alert('Pedido realizado com sucesso!')
-        localStorage.setItem('cart', '')
-        context.setCart('')
+        localStorage.removeItem('cart')
+        context.setCart([])
         navigate('/home')
     }
 
@@ -85,15 +83,19 @@ box-sizing: border-box;
 
 input{
     height: 40px;
+    width: 100%;
     outline: none;
     border: 1px solid #E013393B;
     border-radius: 5px;
     padding-left: 5px;
     box-sizing: border-box;
+    font-family: 'Ropa Sans';
+    font-size: 20px;
 }
 
 input::placeholder{
     color: #600818;
+    font-family: 'Ropa Sans';
 }
 
 select{
@@ -105,6 +107,8 @@ select{
     color: #600818;
     padding-left: 5px;
     box-sizing: border-box;
+    font-family: 'Ropa Sans';
+    font-size: 15px;
 }
 `
 
@@ -117,4 +121,5 @@ border-radius: 5px;
 font-size: 25px;
 color: #ffffff;
 cursor: pointer;
+font-family: 'Ropa Sans';
 `

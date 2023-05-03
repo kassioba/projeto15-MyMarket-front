@@ -1,10 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function Order({order}){
     const navigate = useNavigate()
-
-    console.log(order.products)
 
     return (
         <OrderContainer onClick={() => navigate(`/orders/${order._id}`)}>

@@ -1,9 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { SingUpContainer } from "./SignUpStyled";
+import Context from "../../Context";
 
 export default function SignUpPage() {
+
+    const context = useContext(Context)
     const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: ""});
     const [disableButton, setDisableButton] = useState(true);
     const [sendSignUp, setSendSignUp] = useState(false);
@@ -35,7 +38,7 @@ export default function SignUpPage() {
                 password: form.password
             }
 
-            axios.post("https://mymarket.onrender.com/signUp", toSend)
+            axios.post(`${context.url}signUp`, toSend)
             .then((res) => {      
                 setDisableButton(true);
                 setSendSignUp(false);
@@ -98,9 +101,9 @@ export default function SignUpPage() {
                 <button disabled={disableButton||sendSignUp}>Cadastrar</button>
             </form>
 
-            <Link to={"/"}>
+            <p onClick={() => navigate("/")}>
                 Já tem uma conta? Entre agora!
-            </Link>
+            </p>
         </SingUpContainer>
     )
 }

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import { SingInContainer } from "./SignInStyles"
@@ -27,7 +27,7 @@ export default function SignInPage() {
     function submitSignIn(e) {
         e.preventDefault();
         setSendSignIn(true);
-        axios.post("https://mymarket.onrender.com/signIn", form)
+        axios.post(`${context.url}signIn`, form)
             .then((res) => {
                 setSendSignIn(false)
                 context.setToken(res.data.token)
@@ -72,9 +72,9 @@ export default function SignInPage() {
                 <button disabled={disableButton || sendSignIn}>Entrar</button>
             </form>
 
-            <Link to={"/signup"} >
+            <p onClick={() => navigate("/signup")} >
                 Primeira vez? Cadastre-se!
-            </Link>
+            </p>
         </SingInContainer>
     )
 }

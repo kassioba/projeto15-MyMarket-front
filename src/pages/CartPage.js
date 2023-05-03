@@ -47,7 +47,7 @@ export default function CartPage() {
     
     function deleteCartProduct(productId) {
         const updatedCart = context.cart.filter(item => item.product._id !== productId)
-        context.setCart(updatedCart)
+        context.setCart(updatedCart, () => calculateTotal())
         const updatedCartJSON = JSON.stringify(updatedCart)
         localStorage.setItem("cart", updatedCartJSON)
 
@@ -56,11 +56,6 @@ export default function CartPage() {
 
     useEffect(() => {
         calculateTotal()
-        const cartJSON = localStorage.getItem("cart")
-        if (cartJSON) {
-            const cart = JSON.parse(cartJSON)
-            context.setCart(cart)
-        }
     }, [context.cart])
   
     return (

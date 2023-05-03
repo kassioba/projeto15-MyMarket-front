@@ -18,7 +18,7 @@ export default function App() {
   const [token, setToken] = useState("")
   const [userId, setUserId] = useState("")
 
-  const url = "https://mymarket.onrender.com/"
+  const url = process.env.REACT_APP_API_URL
 
   const contextValue = { products, setProducts, cart, setCart, total, setTotal, token, setToken, url, userId, setUserId }
   

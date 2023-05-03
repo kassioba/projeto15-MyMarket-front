@@ -14,15 +14,15 @@ export default function OrdersPage(){
 
     const config = {
         headers:{
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token || context.token}`
         }
     }
 
     useEffect(() => {
-        axios.get(`https://mymarket.onrender.com/orders`, config)
+        axios.get(`${context.url}orders`, config)
         .then(res => setOrders(res.data.reverse()))
         .catch(err => console.log(err))
-    },[])
+    }, [])
 
      
     return (
@@ -48,6 +48,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+font-family: 'Ropa Sans';
 
 span{
     font-size: 20px;
@@ -58,7 +59,7 @@ span{
 
 const OrdersContainer = styled.div`
 width: 87vw;
-height: 438px;
+height: 70vh;
 border-radius: 5px;
 padding-left: 10px;
 padding-right: 10px;
